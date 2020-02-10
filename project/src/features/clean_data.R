@@ -1,20 +1,9 @@
 library(data.table)
 set.seed(77)
 
-DT<-fread('./project/volume/data/raw/2008.csv')
+train <- fread('./project/volume/data/raw/train_file.csv')
 
-pairs(DepDelay~CRSDepTime+Distance,data=DT[1:1000,])
+train_without_id<-train[,.(V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,result)]
 
-DT[is.na(DT$DepDelay)]$DepDelay<-0
-
-sub_DT<-DT[,.(UniqueCarrier,CRSDepTime,Distance,DepDelay)]
-
-# here I divide the data into train and test so that I'm working on a similar problem as all of you
-# note that you do not need to do this on your dataset
-rand_inx<-sample(1:nrow(sub_DT),1000000)
-
-train<-sub_DT[!rand_inx,]
-test<-sub_DT[rand_inx,]
-
-fwrite(train,'./project/volume/data/interim/train.csv')
+fwrite(train_without_id,'./project/volume/data/interim/train.csv')
 fwrite(test,'./project/volume/data/interim/test.csv')
